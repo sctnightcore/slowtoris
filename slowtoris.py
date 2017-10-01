@@ -2,7 +2,7 @@
 
 '''
 
-slowtoris.py - Slowloris implementation in Python3 with support for Tor and SOCKS5 proxies.
+slowtoris.py - Slow Loris implementation in Python3 with support for Tor and SOCKS5 proxies.
 
 --
 
