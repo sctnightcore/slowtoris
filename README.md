@@ -18,7 +18,7 @@ You can view the usage of this script by running:
 If you wish to use the Tor network, tor must be installed and the service
 must be started.
 
-## Installating Tor:
+## Installing Tor:
 
     Ubuntu/Debian:  https://www.torproject.org/docs/debian.html.en
 
