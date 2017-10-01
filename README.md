@@ -18,7 +18,7 @@ You can view the usage of this script by running:
 If you wish to use the Tor network, tor must be installed and the service
 must be started.
 
-##Installating Tor:
+## Installating Tor:
 
     Ubuntu/Debian:  https://www.torproject.org/docs/debian.html.en
 
@@ -28,7 +28,7 @@ must be started.
 
     CentOS/Fedora:  # yum install tor
 
-##Starting the tor service:
+## Starting the tor service:
 
     If you do not know if you are using Systemd or OpenRC you are very
     probably using Systemd.
@@ -37,11 +37,11 @@ must be started.
 
     OpenRC:  # rc-service tor start
 
-##Usage:
+## Usage:
 
 slowtoris.py [OPTIONS] TARGET
 
-##Options:
+## Options:
 
     -p, --port INTEGER     Port to attack on the remote target. Default is 80.
 
