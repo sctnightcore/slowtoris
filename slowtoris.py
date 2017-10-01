@@ -124,7 +124,7 @@ def attack(target, port, sockets, randomize, tor, proxy, quiet):
 
 
     # Inform user the script has started
-    logging.info("Target: %s \tThreads: %s", target, sockets)
+    logging.info("Target: %s \tSockets: %s", target, sockets)
 
     logging.info("Creating sockets...")
 
