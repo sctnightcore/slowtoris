@@ -2,6 +2,12 @@
 
 A Slow Loris atack implementation in Python3 with support for the Tor network and SOCKS5 proxies.
 
+You can view the usage of this script by running:
+
+    $ slowtoris.py --help
+
+## Python modules:
+
 You must have the click Python3 module which can be installed with pip:
 
     $ sudo pip3 install click
@@ -10,10 +16,6 @@ You must have the socks Python3 module which can be installed through
 various packages by using pip, we suggest PySocks:
 
     $ sudo pip3 install PySocks
-
-You can view the usage of this script by running:
-
-    $ slowtoris.py --help
 
 If you wish to use the Tor network, tor must be installed and the service
 must be started.
@@ -39,7 +41,7 @@ must be started.
 
 ## Usage:
 
-slowtoris.py [OPTIONS] TARGET
+    slowtoris.py [OPTIONS] TARGET
 
 ## Options:
 
