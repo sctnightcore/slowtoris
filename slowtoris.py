@@ -2,7 +2,7 @@
 
 '''
 
-slowloris.py - Slowloris implementation in Python3 with support for Tor and general SOCKS5 proxies.
+slowtoris.py - Slowloris implementation in Python3 with support for Tor and SOCKS5 proxies.
 
 --
 
@@ -52,7 +52,7 @@ def attack(target, port, sockets, randomize, tor, proxy, quiet):
     You must have the socks Python3 module which can be installed through various packages by using pip, we suggest PySocks:\n
         $ sudo pip3 install PySocks\n
     You can view the usage of this script by running:\n 
-        $ ./slowloris.py --help\n
+        $ ./slowtoris.py --help\n
     If you wish to use the Tor network, tor must be installed and the service must be started.\n
     Installation:\n
         Ubuntu/Debian:  https://www.torproject.org/docs/debian.html.en\n
