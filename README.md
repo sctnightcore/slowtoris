@@ -1,6 +1,6 @@
 # SlowToris
 
-A Slow Loris atack implementation in Python3 with support for the Tor network and SOCKS5 proxies.
+A Slow Loris attack implementation in Python3 with support for the Tor network and SOCKS5 proxies.
 
 You can view the usage of this script by running:
 
@@ -8,12 +8,12 @@ You can view the usage of this script by running:
 
 ### Python modules:
 
-You must have the click Python3 module which can be installed with pip:
+You must have the `click` Python3 module which can be installed with pip:
 
     $ sudo pip3 install click
 
 You must have the socks Python3 module which can be installed through
-various packages by using pip, we suggest PySocks:
+various packages by using pip, we suggest `PySocks`:
 
     $ sudo pip3 install PySocks
 
@@ -51,13 +51,12 @@ must be started.
 
     -r, --randomize        Randomize user agents for every new socket.
 
-    -T, --tor              Open the connections the connections through the Tor
-                           network by using localhost:9050 as a SOCKS5 proxy. If
-                           you wish to use the Tor network through another host
-                           or port you must use the -x option.
+    -T, --tor              Open the connections through the Tor network by
+			   using localhost:9050 as a SOCKS5 proxy. If you wish
+			   to use the Tor network through another host or port
+			   you must use the -x option.
 
-    -x, --proxy host:port  Use a SOCKS5 proxy
-                           to communicate with the target.
+    -x, --proxy host:port  Use a SOCKS5 proxy to communicate with the target.
 
     -q, --quiet            Run the script in quiet mode removing all output.
 
