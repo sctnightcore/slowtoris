@@ -36,6 +36,10 @@ various packages by using pip, we suggest `PySocks`:
 
     $ sudo pip3 install PySocks
 
+You must have the `stem` Python3 module which can be installed with pip:
+
+    $ sudo pip3 install stem
+
 If you wish to use the Tor network, tor must be installed and the service
 must be started.
 
