@@ -11,6 +11,7 @@ setup(
         download_url = 'https://github.com/naganori-san/slowtoris/archive/0.2.tar.gz',
         keywords = ['hacking-tools', 'security', 'dos-tools'],
         license = 'MIT',
+        scripts = ['slowtoris/slowtoris'],
         classifiers = [
             'Development Status :: 5 - Production/Stable',
             'Intended Audience :: Education',
@@ -29,10 +30,5 @@ setup(
         install_requires = [
             'click',
             'PySocks'
-            ],
-        entry_points={
-            'console_scripts': [
-                'slowtoris = slowtoris.py:attack'
-                ]
-                }
+            ]
         )
