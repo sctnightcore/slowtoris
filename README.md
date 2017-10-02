@@ -43,11 +43,11 @@ Get the password hash:
 Open the torrc file (probably `/etc/torrc` or `/etc/tor/torrc`) and uncomment
 he following line:
     
-    `ControlPort 9051`
+    ControlPort 9051
 
 A few lines later uncomment the line:
 
-    `HashedControlPassword` 
+    HashedControlPassword 
 
 And replace the hased password with the one your generated earlier.
 
