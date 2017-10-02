@@ -29,6 +29,7 @@ setup(
             ],
         install_requires = [
             'click',
-            'PySocks'
+            'PySocks',
+            'stem'
             ]
         )
