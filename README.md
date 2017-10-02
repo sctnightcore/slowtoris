@@ -30,6 +30,27 @@ must be started.
 
     CentOS/Fedora:  # yum install tor
 
+### Configuring tor:
+
+We use the tor controller to refresh the circuit through port 9051.
+
+You must thus activate it and add your password to be able to authenticate.
+
+Get the password hash:
+
+    # tor --hash-password YOUR_PASSWORD
+    
+Open the torrc file (probably `/etc/torrc` or `/etc/tor/torrc`) and uncomment
+he following line:
+    
+    `ControlPort 9051`
+
+A few lines later uncomment the line:
+
+    `HashedControlPassword` 
+
+And replace the hased password with the one your generated earlier.
+
 ### Starting the tor service:
 
     If you do not know if you are using Systemd or OpenRC you are very
@@ -51,9 +72,10 @@ must be started.
 
     -r, --randomize        Randomize user agents for every new socket.
 
-    -T, --tor              Open the connections through the Tor network by
-			   using localhost:9050 as a SOCKS5 proxy. If you wish
-			   to use the Tor network through another host or port
+    -T, --tor PASSWORD     Open the connections through the Tor network by
+			   using localhost:9050 as a SOCKS5 proxy. The password
+                           is the one chose for the controller in your torrc file.
+                           If you wish to use the Tor network through another host or port
 			   you must use the -x option.
 
     -x, --proxy host:port  Use a SOCKS5 proxy to communicate with the target.
