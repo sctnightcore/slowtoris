@@ -5,5 +5,6 @@ slowtoris/slowtoris.py
 slowtoris.egg-info/PKG-INFO
 slowtoris.egg-info/SOURCES.txt
 slowtoris.egg-info/dependency_links.txt
+slowtoris.egg-info/entry_points.txt
 slowtoris.egg-info/requires.txt
 slowtoris.egg-info/top_level.txt
