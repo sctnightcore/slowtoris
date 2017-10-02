@@ -8,7 +8,7 @@ setup(
         author = 'Gabriel Duque',
         author_email = 'g.duque@protonmail.ch',
         url = 'https://github.com/naganori-san/slowtoris',
-        download_url = 'https://github.com/naganori-san/slowtoris/archive/0.1.tar.gz',
+        download_url = 'https://github.com/naganori-san/slowtoris/archive/0.2.tar.gz',
         keywords = ['hacking-tools', 'security', 'dos-tools'],
         license = 'MIT',
         classifiers = [
