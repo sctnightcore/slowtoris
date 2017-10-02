@@ -5,8 +5,27 @@ A Slow Loris attack implementation in Python3 with support for the Tor network a
 You can view the usage of this script by running:
 
     $ slowtoris.py --help
+### Installing Slowtoris:
 
-### Python modules:
+##### Using pip:
+
+    $ pip install slowtoris
+
+If you choose this solution you can jump to the Tor installation part.
+
+##### Manually:
+
+You must clone the git:
+
+    $ git clone https://github.com/naganori-san/slowtoris
+
+Move to the directory:
+
+    $ cd slowtoris
+
+Install the script:
+
+    $ sudo python3 setup.py install
 
 You must have the `click` Python3 module which can be installed with pip:
 
