@@ -46,7 +46,7 @@ def init_connection(target, port, randomize, user_agents):
 @click.option('--quiet', '-q', is_flag=True, help="Run the script in quiet mode removing all output.")
 @click.argument('target', required=1)
 def attack(target, port, sockets, randomize, tor, proxy, quiet):
-    """A Slow Loris atack implementation in Python3 with support for proxies and the Tor network.\n
+    """A Slow Loris attack implementation in Python3 with support for the Tor network and SOCKS5 proxies.\n
     You must have the click Python3 module which can be installed with pip:\n
         $ sudo pip3 install click\n
     You must have the socks Python3 module which can be installed through various packages by using pip, we suggest PySocks:\n
