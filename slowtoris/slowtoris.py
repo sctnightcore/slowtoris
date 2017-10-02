@@ -74,7 +74,7 @@ def attack(target, port, sockets, randomize, tor, proxy, quiet):
     if tor:
         try:
             import socks
-            socks.set_default_proxy(socks.SOCKS5, "localhost", 9050)
+            socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
             socket.socket = socks.socksocket
             logging.info("Tor enabled on localhost:9050")
         except ImportError:
