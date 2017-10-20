@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
         name = 'slowtoris',
         packages = ['slowtoris'],
-        version = '1.0',
+        version = '1.3',
         description = 'A Python implementation of the Slow Loris attack with support for the Tor network and SOCKS5 proxies.',
         author = 'Gabriel Duque',
         author_email = 'g.duque@protonmail.ch',
