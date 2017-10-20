@@ -9,6 +9,8 @@ You can view the usage of this script by running:
 
 ##### Using pip:
 
+If you're not in a virtual environment you should run this as a superuser.
+
     $ pip install slowtoris
 
 If you choose this solution you can jump to the Tor installation part.
@@ -25,18 +27,9 @@ Move to the directory:
 
 Install the script:
 
+If you're not in a virtual environment you should run this as a superuser.
+
     $ sudo python3 setup.py install
-
-You must have the `click` Python3 module which can be installed with pip:
-
-    $ sudo pip3 install click
-
-You must have the socks Python3 module which can be installed through
-various packages by using pip, we suggest `PySocks`:
-
-    $ sudo pip3 install PySocks
-
-If you wish to use the Tor network, tor must be installed.
 
 ### Installing Tor:
 

@@ -145,7 +145,7 @@ def main(target, port, sockets, randomize, tor, tor_instances, proxy, quiet):
     if tor:
         subprocess.run(['mkdir', '-pv', 'data/tor0'])
         subprocess.Popen(['tor', '--ControlPort', '8050' ,'--PidFile', 'tor0.pid', '--SocksPort', '9050', '--DataDirectory', 'data/tor0'], stdin=None, stdout=None, stderr=None)
-        time.sleep(1)
+        time.sleep(5)
         tmp = subprocess.check_output(['tor-resolve', '-p', '9050', target])
         target = tmp.decode('utf-8').strip('\n')
         tors = dict()

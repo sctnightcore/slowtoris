@@ -3,12 +3,12 @@ from setuptools import setup
 setup(
         name = 'slowtoris',
         packages = ['slowtoris'],
-        version = '1.3',
+        version = '1.4',
         description = 'A Python implementation of the Slow Loris attack with support for the Tor network and SOCKS5 proxies.',
         author = 'Gabriel Duque',
         author_email = 'g.duque@protonmail.ch',
         url = 'https://github.com/naganori-san/slowtoris',
-        download_url = 'https://github.com/naganori-san/slowtoris/archive/0.3.tar.gz',
+        download_url = 'https://github.com/naganori-san/slowtoris/archive/1.4.tar.gz',
         keywords = ['hacking-tools', 'security', 'dos-tools'],
         license = 'MIT',
         scripts = ['slowtoris/slowtoris'],
@@ -29,7 +29,6 @@ setup(
             ],
         install_requires = [
             'click',
-            'PySocks',
-            'stem'
+            'PySocks'
             ]
         )
